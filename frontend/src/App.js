@@ -1,13 +1,15 @@
 import React from 'react';
-import { BrowserRouter as Router } from 'react-router-dom'; // Importez BrowserRouter depuis react-router-dom
-import SignupForm from './components/SignUpForm'; // Utilisez SignupForm plutôt que SignUpForm
+import { BrowserRouter as Router } from 'react-router-dom';
+import SignUpForm from './components/SignUpForm';
 import './App.css';
 
 function App() {
   return (
     <Router>
-        <SignupForm />
-        </Router>
+      <div className="App">
+        <SignUpForm />
+      </div>
+    </Router>
   );
 }
 
