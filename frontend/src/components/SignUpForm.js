@@ -1,13 +1,17 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import { TextField, Button, Card, CardContent, Typography, Container, Box } from '@mui/material';
-import backgroundImage from '../img/open-book-concept-fairy-tale-fiction-storytelling.jpg'; // Importez l'image d'arrière-plan
+import { useNavigate } from 'react-router-dom'; 
+import backgroundImage from '../img/open-book-concept-fairy-tale-fiction-storytelling.jpg'; 
 
 function SignupForm() {
   const [user, setUser] = useState({
-    name: '',
-    email: '',
-    password: '',
+    first_name: '',
+    last_name: '',
+    email: ''
   });
+  const [registrationMessage, setRegistrationMessage] = useState('');
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -17,19 +21,32 @@ function SignupForm() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(user);
-    // Traitez ici la logique de soumission du formulaire, comme appeler une API.
+
+    // Vérifier si les champs sont remplis ou pas
+    if (!user.first_name || !user.last_name || !user.email) {
+      setRegistrationMessage('Veuillez remplir tous les champs obligatoires.');
+      return; 
+    }
+
+    try {
+      await axios.post('http://localhost:8080/signup', user);
+      setRegistrationMessage('User registered successfully');
+      navigate('/users'); 
+    } catch (error) {
+      setRegistrationMessage('Error registering user');
+      console.error('Error registering user:', error);
+    }
   };
 
   return (
     <Box
       sx={{
-        backgroundImage: `url(${backgroundImage})`, // Utilisez l'image d'arrière-plan importée
+        backgroundImage: `url(${backgroundImage})`, 
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        minHeight: '100vh', // Assurez-vous que le conteneur prend toute la hauteur de la vue
+        minHeight: '100vh', 
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
@@ -40,7 +57,7 @@ function SignupForm() {
         <Card sx={{ boxShadow: 3 }}>
           <CardContent>
             <Typography component="h1" variant="h5" style={{ marginTop: '20px' }}>
-            Découvrez un Monde de Newsletters Personnalisées 👾     
+            Découvrez un Monde de <u>Newsletters</u> Personnalisées 👾     
             </Typography>
             <Box
               component="form"
@@ -53,12 +70,25 @@ function SignupForm() {
                 margin="normal"
                 required
                 fullWidth
-                id="name"
-                label="Nom"
-                name="name"
-                autoComplete="name"
+                id="first_name"
+                label="Prénom"
+                name="first_name"
+                autoComplete="first_name"
                 autoFocus
-                value={user.name}
+                value={user.first_name}
+                onChange={handleChange}
+              />
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                id="last_name"
+                label="Nom"
+                name="last_name"
+                autoComplete="last_name"
+                autoFocus
+                value={user.last_name}
                 onChange={handleChange}
               />
               <TextField
@@ -73,19 +103,6 @@ function SignupForm() {
                 value={user.email}
                 onChange={handleChange}
               />
-              <TextField
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                name="password"
-                label="Mot de passe"
-                type="password"
-                id="password"
-                autoComplete="current-password"
-                value={user.password}
-                onChange={handleChange}
-              />
               <Button
                 type="submit"
                 fullWidth
@@ -95,6 +112,9 @@ function SignupForm() {
               >
                 S'inscrire
               </Button>
+              {registrationMessage && (
+                <Typography variant="body2" color={registrationMessage.includes('successfully') ? 'success' : 'error' }>{registrationMessage}</Typography>
+              )}
             </Box>
           </CardContent>
         </Card>
