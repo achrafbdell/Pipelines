@@ -1,4 +1,4 @@
-# Des Newsletter Personnalisées 👾
+# Des Newsletters Personnalisées 👾
 
 ## TP Pipelines
 
