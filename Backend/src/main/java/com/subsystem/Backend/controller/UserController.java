@@ -18,19 +18,14 @@ public class UserController {
         this.userRepo = userRepo;
     }
 
-    @GetMapping("/")
-    public List<User> getAllUsers() {
-        return userRepo.findAll();
+    @PostMapping("/signup")
+    public User createUser(@RequestBody User user) {
+        return userRepo.save(user);
     }
 
     @GetMapping("/{id}")
     public Optional<User> getUserById(@PathVariable("id") long id) {
         return userRepo.findById(id);
-    }
-
-    @PostMapping("/signup")
-    public User createUser(@RequestBody User user) {
-        return userRepo.save(user);
     }
 
     @PutMapping("/{id}")
